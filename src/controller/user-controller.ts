@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { BaseResponse, Logger } from '../helper';
 import 'express-boom';
+import userService from '../service/user-service';
 
 interface User {
     id: number;
@@ -15,9 +16,11 @@ export class UserController {
     static async getUser(req: Request, res: Response): Promise<void> {
         const contextLogger = 'UserController';
         try {
+            const users = await userService.getAllUsers();
             Logger.info(`${contextLogger} | getUser`, users);
             return BaseResponse(res, 'User created successfully', 'success', { data: users })
         } catch (error) {
+            Logger.error(`${contextLogger} | Error: ${error} | Message: ${error}`);
             res.boom.internal('Internal Server Error');
         }
     }

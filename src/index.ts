@@ -7,6 +7,7 @@ import express, { Express } from 'express';
 import { HttpLogger, Logger } from './helper';
 
 import { routes } from './routes';
+import { DBConnection } from './config/dbPoolInfra';
 
 const app: Express = express();
 const port = 8000
@@ -22,6 +23,7 @@ routes.forEach(route => {
 
 app.listen(port, async (): Promise<void> => {
   try {
+      await DBConnection();
       Logger.info(`[Bun-Service] Server is running on port ${port}`);
   } catch (error) {
       if (error instanceof Error) {
