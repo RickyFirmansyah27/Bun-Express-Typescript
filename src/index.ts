@@ -5,7 +5,7 @@ dotenv.config();
 import boom from 'express-boom';
 import express, { Express } from 'express';
 import { HttpLogger, Logger } from './helper';
-
+import cors from 'cors';
 import { routes } from './routes';
 import { DBConnection } from './config/dbPoolInfra';
 
@@ -14,6 +14,9 @@ const port = 8000
 
 // Middleware
 app.use(boom());
+app.use(cors({
+    origin: '*',
+}));
 app.use(HttpLogger);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
