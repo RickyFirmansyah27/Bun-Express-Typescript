@@ -8,6 +8,8 @@ import { HttpLogger, Logger } from './helper';
 import cors from 'cors';
 import { routes } from './routes';
 import { DBConnection } from './config/dbPoolInfra';
+import { rabbitMqConnection } from './config/rabbitmqPoolInfra';
+
 
 const app: Express = express();
 const port = 8000
@@ -27,6 +29,7 @@ routes.forEach(route => {
 app.listen(port, async (): Promise<void> => {
   try {
       await DBConnection();
+      await rabbitMqConnection();
       Logger.info(`[Bun-Service] Server is running on port ${port}`);
   } catch (error) {
       if (error instanceof Error) {

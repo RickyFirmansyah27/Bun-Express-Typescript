@@ -9,32 +9,41 @@ interface User {
     email: string;
 }
 
-// Sample in-memory users array to store users
 const users: User[] = [];
 
-export class UserController {
-    static async getUser(req: Request, res: Response): Promise<void> {
-        const contextLogger = 'UserController';
-        try {
-            const users = await userService.getAllUsers();
-            Logger.info(`${contextLogger} | getUser`, users);
-            return BaseResponse(res, 'User created successfully', 'success', { data: users })
-        } catch (error) {
-            Logger.error(`${contextLogger} | Error: ${error} | Message: ${error}`);
-            res.boom.internal('Internal Server Error');
-        }
+export const getUser = async (req: Request, res: Response): Promise<void> => {
+    const contextLogger = 'UserController';
+    try {
+        Logger.info(`${contextLogger} | getUser`);
+        const users = await userService.getAllUsers();
+        return BaseResponse(res, 'Users retrieved successfully', 'success', { data: users });
+    } catch (error) {
+        return BaseResponse(res, 'error', 'internalServerError', null);
     }
+};
 
-    static async createUser(req: Request, res: Response): Promise<void> {
-        const contextLogger = 'UserController';
-        try {
-            const payload = req.body;
-            payload.id = users.length + 1;
-            users.push(payload);
-            Logger.info(`${contextLogger} | createUser`, users);
-            return BaseResponse(res, 'User created successfully', 'success', { data: users })
-        } catch (error) {
-            res.boom.internal('Internal Server Error');
+export const getUserDetail = async (req: Request, res: Response): Promise<void> => {
+    const contextLogger = 'UserController';
+    const { id } = req.params;
+
+    try {
+        Logger.info(`${contextLogger} | getUser | ID: ${id}`);
+
+        if (!id) {
+            Logger.error(`${contextLogger} | getUser | Missing required parameter: id`);
+            return BaseResponse(res, 'ID is required', 'badRequest', null);
         }
+
+        const users = await userService.getUserDetail(id);
+
+        if (!users) {
+            Logger.warn(`${contextLogger} | getUser | User not found with ID: ${id}`);
+            return BaseResponse(res, 'User not found', 'notFound', null);
+        }
+
+        return BaseResponse(res, 'Users retrieved successfully', 'success', { data: users });
+    } catch (error) {
+        Logger.error(`${contextLogger} | getUser | Error: ${error}`);
+        return BaseResponse(res, 'Internal server error', 'internalServerError', null);
     }
-}
+};

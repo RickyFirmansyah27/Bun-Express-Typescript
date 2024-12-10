@@ -9,6 +9,7 @@
     "dependencies": {
         "@logtail/node": "^0.5.2",
         "@logtail/winston": "^0.5.2",
+        "amqplib": "^0.10.5",
         "axios": "^1.7.7",
         "cors": "^2.8.5",
         "dotenv": "^16.4.5",
@@ -20,11 +21,12 @@
         "winston": "^3.15.0"
     },
     "devDependencies": {
+        "@types/amqplib": "^0.10.6",
+        "@types/cors": "^2.8.17",
         "@types/express": "^5.0.0",
         "@types/express-boom": "^3.0.4",
-        "@types/cors": "^2.8.17",
-        "bun-types": "latest",
-        "@types/pg": "^8.11.10"
+        "@types/pg": "^8.11.10",
+        "bun-types": "latest"
     },
     "module": "src/index.js"
 }
